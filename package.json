@@ -1,6 +1,6 @@
 {
   "name": "@freycikkk/enjin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "freycikkk",
     "github": "https://github.com/freycikkk/enjin"
@@ -10,9 +10,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
+    "dist",
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
