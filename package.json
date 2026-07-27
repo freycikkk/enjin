@@ -1,0 +1,35 @@
+{
+  "name": "@freycikkk/enjin",
+  "version": "1.0.0",
+  "author": {
+    "name": "freycikkk",
+    "github": "https://github.com/freycikkk/enjin"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "pack": "npm pack",
+    "format": "npx eslint ./src"
+  },
+  "dependencies": {
+    "discord-hybrid-sharding": "^3.0.1",
+    "discord.js": "^14.27.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "globals": "^17.7.0",
+    "typescript-eslint": "^8.65.0"
+  }
+}
