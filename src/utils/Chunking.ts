@@ -11,7 +11,7 @@ export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
   let buffer = '';
 
   for (const line of lines) {
-    const next = buffer ? buffer + '\n' + line : line;
+    const next = buffer ? `${buffer}\n${line}` : line;
 
     if (line.length >= maxSize) {
       if (buffer.trim().length) {
@@ -27,6 +27,7 @@ export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
       if (buffer.trim().length) {
         chunks.push(buffer.trimEnd());
       }
+
       buffer = line;
       continue;
     }
@@ -38,5 +39,6 @@ export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
     chunks.push(buffer.trimEnd());
   }
 
-  return chunks;
+  // Always return at least one page.
+  return chunks.length ? chunks : [''];
 }

@@ -42,7 +42,11 @@ export class Paginator {
   }
 
   private split() {
-    this.pages = Chunking(this.content || ' ', this.limit);
+    this.pages = Chunking(this.content, this.limit);
+
+    if (!this.pages.length) {
+      this.pages = [''];
+    }
   }
 
   private format() {
@@ -111,9 +115,9 @@ export class Paginator {
     this.content += this.buffer;
     this.buffer = '';
 
-    if (this.index >= this.pages.length - 1) {
-      this.index = this.pages.length - 1;
-    }
+    this.split();
+
+    this.index = Math.max(0, Math.min(this.index, this.pages.length - 1));
 
     this.msg
       .edit({
@@ -126,10 +130,9 @@ export class Paginator {
   updatePages(pages: string[]) {
     if (this.streaming) return;
 
-    this.pages = pages.length ? pages : [' '];
-    if (this.index >= this.pages.length) {
-      this.index = this.pages.length - 1;
-    }
+    this.pages = pages.length ? pages : [''];
+
+    this.index = Math.max(0, Math.min(this.index, this.pages.length - 1));
 
     this.msg
       ?.edit({
