@@ -1,5 +1,3 @@
-/** @format */
-
 class TextReport {
   private readonly lines: string[] = [];
 
@@ -9,12 +7,12 @@ class TextReport {
   }
 
   blank() {
-    this.lines.push('');
+    this.lines.push("");
     return this;
   }
 
   render() {
-    return this.lines.join('\n');
+    return this.lines.join("\n");
   }
 }
 

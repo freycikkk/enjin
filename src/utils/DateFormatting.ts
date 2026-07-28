@@ -1,6 +1,4 @@
-/** @format */
-
-import type { TimestampStylesString } from 'discord.js';
+import type { TimestampStylesString } from "discord.js";
 
 type DateLike = Date | number;
 
@@ -12,10 +10,10 @@ export class DateFormatting {
 
   static format(date: DateLike, style?: TimestampStylesString) {
     const unix = this.toUnixSeconds(date);
-    return `<t:${unix}${style ? `:${style}` : ''}>`;
+    return `<t:${unix}${style ? `:${style}` : ""}>`;
   }
 
   static relative(date: DateLike) {
-    return this.format(date, 'R');
+    return this.format(date, "R");
   }
 }

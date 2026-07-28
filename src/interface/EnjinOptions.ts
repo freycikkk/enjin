@@ -1,6 +1,4 @@
-/** @format */
-
-import type { Snowflake } from 'discord.js';
+import type { Snowflake } from "discord.js";
 
 export interface EnjinOptions {
   aliases?: string[];

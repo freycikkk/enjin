@@ -1,30 +1,53 @@
 {
   "name": "@freycikkk/enjin",
-  "version": "1.0.2",
-  "author": {
-    "name": "freycikkk",
-    "github": "https://github.com/freycikkk/enjin"
-  },
-  "license": "MIT",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "version": "1.0.3",
+  "description": "A lightweight evaluation engine for Discord.js bots.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },
+  "author": "Freycikkk (https://github.com/freycikkk)",
+  "funding": "https://github.com/sponsors/freycikkk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freycikkk/enjin.git"
+  },
+  "homepage": "https://github.com/freycikkk/enjin",
+  "bugs": "https://github.com/freycikkk/enjin/issues",
+  "keywords": [
+    "client",
+    "discord",
+    "discordjs",
+    "discord-bot",
+    "typescript",
+    "nodejs",
+    "eval",
+    "evaluation",
+    "debug"
+  ],
+  "files": [
+    "./dist",
+    "NOTICE"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "lint": "prettier --check . && tsc --noEmit",
+    "format": "eslint . --fix && prettier --log-level error --write .",
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "pack": "npm pack",
-    "format": "npx eslint ./src"
+    "pack": "npm pack"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "dependencies": {
     "discord-hybrid-sharding": "^3.0.1",
@@ -32,11 +55,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "eslint": "^10.7.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.7.0",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0"
   }
 }

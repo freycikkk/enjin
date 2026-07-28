@@ -1,8 +1,6 @@
 # Enjin
 
-An owner-only evaluation engine for Discord bots built with `discord.js`.
-
-Enjin provides runtime debugging, command execution, and inspection tools for production bots.
+Enjin is an owner-only evaluation engine for Discord.js bots that provides a safe, production-ready way to inspect, debug, and execute commands at runtime without modifying your bot's source code.
 
 ## Features
 

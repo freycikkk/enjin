@@ -1,14 +1,12 @@
-/** @format */
+import WebSocket from "ws";
 
-import WebSocket from 'ws';
-
-import type { Client } from 'discord.js';
-import type { Context } from '../interface/Context.js';
+import type { Client } from "discord.js";
+import type { Context } from "../interface/Context.js";
 
 export const rtt = async (client: Client, ctx: Context) => {
   const { message } = ctx;
 
-  let output = '[ Enjin ] Calculating round-trip time...\n';
+  let output = "[ Enjin ] Calculating round-trip time...\n";
   const statusMsg = await message.reply(output);
 
   const latencies: number[] = [];
@@ -29,7 +27,7 @@ export const rtt = async (client: Client, ctx: Context) => {
   }
 
   if (!latencies.length) {
-    await statusMsg.edit(output + '\n\nAll readings failed.');
+    await statusMsg.edit(output + "\n\nAll readings failed.");
     return;
   }
 
@@ -45,7 +43,7 @@ export const rtt = async (client: Client, ctx: Context) => {
 
 function measureGatewayRTT(): Promise<number | null> {
   return new Promise((resolve) => {
-    const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
+    const ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
     const start = Date.now();
 
     const timeout = setTimeout(() => {
@@ -53,14 +51,14 @@ function measureGatewayRTT(): Promise<number | null> {
       resolve(null);
     }, 5_000);
 
-    ws.once('message', () => {
+    ws.once("message", () => {
       clearTimeout(timeout);
       const end = Date.now();
       ws.close();
       resolve(end - start);
     });
 
-    ws.once('error', () => {
+    ws.once("error", () => {
       clearTimeout(timeout);
       ws.terminate();
       resolve(null);

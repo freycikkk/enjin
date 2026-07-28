@@ -1,14 +1,12 @@
-/** @format */
-
 const MAX_PAGE_SIZE = 1900;
 
 export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
-  if (!text) return [''];
+  if (!text) return [""];
 
-  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
   const chunks: string[] = [];
 
-  let buffer = '';
+  let buffer = "";
 
   for (const line of lines) {
     const next = buffer ? `${buffer}\n${line}` : line;
@@ -16,7 +14,7 @@ export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
     if (line.length >= maxSize) {
       if (buffer.trim().length) {
         chunks.push(buffer.trimEnd());
-        buffer = '';
+        buffer = "";
       }
 
       chunks.push(line);
@@ -40,5 +38,5 @@ export function Chunking(text: string, maxSize = MAX_PAGE_SIZE) {
   }
 
   // Always return at least one page.
-  return chunks.length ? chunks : [''];
+  return chunks.length ? chunks : [""];
 }
