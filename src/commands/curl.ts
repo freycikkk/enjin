@@ -1,6 +1,6 @@
-import dns from "node:dns/promises";
 import { sendResult } from "../utils/respond.js";
 import { isPrivateAddress } from "../utils/network.js";
+import dns from "node:dns/promises";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

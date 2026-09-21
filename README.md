@@ -72,6 +72,7 @@ Example:
 | Engine | Description |
 |--------|-------------|
 | `js` | JavaScript evaluation |
+| `iife` | JavaScript evaluation wrapped in its own async IIFE (supports top-level `return`/`await` and scoped declarations) |
 | `shell` | Shell execution |
 | `curl` | HTTP requests |
 | `cat` | File inspection |

@@ -1,5 +1,5 @@
-import { Enjin } from "@freycikkk/enjin";
 import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Enjin } from "@freycikkk/enjin";
 
 class Bot extends Client {
   enjin = new Enjin(this, {

@@ -23,8 +23,8 @@ export async function sendResult(
   token: string | null | undefined,
   lang = "js"
 ) {
-  const sanitized = sanitize(value, secrets, token);
-  const pages = Chunking(stringify(sanitized));
+  const sanitized = sanitize(stringify(value), secrets, token);
+  const pages = Chunking(sanitized);
   const paginator = new Paginator(message, pages, lang);
   await paginator.init();
 }

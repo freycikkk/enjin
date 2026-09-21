@@ -1,1 +1,1 @@
-export const Commands = ["help", "cat", "curl", "shell", "js", "rtt", "shard"] as const;
+export const Commands = ["help", "cat", "curl", "shell", "js", "iife", "rtt", "shard"] as const;

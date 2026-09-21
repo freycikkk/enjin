@@ -2,6 +2,7 @@ import { js } from "./commands/js.js";
 import { cat } from "./commands/cat.js";
 import { rtt } from "./commands/rtt.js";
 import { curl } from "./commands/curl.js";
+import { iife } from "./commands/iife.js";
 import { shard } from "./commands/shard.js";
 import { shell } from "./commands/shell.js";
 import { Client, Events } from "discord.js";
@@ -68,6 +69,10 @@ class Enjin {
         case "js":
         case "javascript":
           await js(this.client, ctx, input);
+          break;
+
+        case "iife":
+          await iife(this.client, ctx, input);
           break;
 
         case "sh":

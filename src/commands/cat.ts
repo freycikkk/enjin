@@ -1,6 +1,6 @@
+import { sendResult } from "../utils/respond.js";
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import { sendResult } from "../utils/respond.js";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
