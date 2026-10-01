@@ -20,16 +20,14 @@ export const rtt = async (client: Client, ctx: Context) => {
     } else {
       output += `\nReading ${i + 1}: Failed`;
     }
-
-    if (i < 4) {
-      await statusMsg.edit(output);
-    }
   }
 
   if (!latencies.length) {
     await statusMsg.edit(output + "\n\nAll readings failed.");
     return;
   }
+
+  await statusMsg.edit(output);
 
   const avg = latencies.reduce((a, b) => a + b, 0) / latencies.length;
 
