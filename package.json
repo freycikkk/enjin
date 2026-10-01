@@ -1,7 +1,7 @@
 {
   "name": "@freycikkk/enjin",
   "type": "module",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A lightweight evaluation engine for Discord.js bots.",
   "exports": {
     ".": {
