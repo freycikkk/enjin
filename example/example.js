@@ -7,6 +7,8 @@ class Bot extends Client {
     owners: ["1156173961034465333"],
     prefix: ".",
     secrets: [process.env.API_KEY],
+    react: true,
+    reactEmoji: "✔️",
   });
   constructor() {
     super({
