@@ -23,7 +23,8 @@ export class Paginator {
     pagesOrLang?: string[] | string,
     private lang = "js",
     private limit = 1900,
-    private killProcess?: () => void
+    private killProcess?: () => void,
+    private idleTimeout = 600000
   ) {
     if (Array.isArray(pagesOrLang)) {
       this.pages = pagesOrLang.length ? pagesOrLang : [" "];
@@ -65,6 +66,7 @@ export class Paginator {
 
     const collector = this.msg.createMessageComponentCollector({
       componentType: ComponentType.Button,
+      idle: this.idleTimeout,
     });
 
     collector.on("collect", async (i) => {
@@ -79,8 +81,9 @@ export class Paginator {
         this.killProcess?.();
         this.processKilled = true;
         this.stopped = true;
-        collector.stop();
-        return i.update({ components: [] });
+        await i.update({ components: this.buildComponents(true) });
+        collector.stop("stopped");
+        return;
       }
 
       if (i.customId === "prev" && this.index > 0) this.index--;
@@ -91,6 +94,11 @@ export class Paginator {
         components: this.buildComponents(),
       });
       return;
+    });
+
+    collector.on("end", () => {
+      this.stopped = true;
+      this.msg?.edit({ components: this.buildComponents(true) }).catch(() => {});
     });
   }
 
@@ -120,7 +128,7 @@ export class Paginator {
     this.msg
       .edit({
         content: this.format(),
-        components: this.buildComponents(),
+        components: this.buildComponents(this.stopped),
       })
       .catch(() => {});
   }
@@ -135,26 +143,25 @@ export class Paginator {
     this.msg
       ?.edit({
         content: this.format(),
-        components: this.buildComponents(),
+        components: this.buildComponents(this.stopped),
       })
       .catch(() => {});
   }
 
-  private buildComponents() {
-    if (this.stopped) return [];
+  private buildComponents(disabled = false) {
     if (this.pages.length <= 1 && !this.isShell()) return [];
 
     const row = new ActionRowBuilder<ButtonBuilder>();
 
     if (this.pages.length > 1) {
       row.addComponents(
-        ButtonBuilder.from(this.prev).setDisabled(this.index === 0),
-        ButtonBuilder.from(this.next).setDisabled(this.index === this.pages.length - 1)
+        ButtonBuilder.from(this.prev).setDisabled(disabled || this.index === 0),
+        ButtonBuilder.from(this.next).setDisabled(disabled || this.index === this.pages.length - 1)
       );
     }
 
     if (this.streaming && !this.processKilled) {
-      row.addComponents(ButtonBuilder.from(this.stop));
+      row.addComponents(ButtonBuilder.from(this.stop).setDisabled(disabled));
     }
 
     return row.components.length ? [row] : [];
@@ -163,6 +170,6 @@ export class Paginator {
   markProcessKilled() {
     this.processKilled = true;
     this.flush();
-    this.msg?.edit({ components: this.buildComponents() }).catch(() => {});
+    this.msg?.edit({ components: this.buildComponents(this.stopped) }).catch(() => {});
   }
 }

@@ -10,13 +10,15 @@ import { Default } from "./commands/default.js";
 import { Commands } from "./readonly/Commands.js";
 import { detectShard } from "./utils/detectShardType.js";
 
-import type { Message, Snowflake } from "discord.js";
 import type { EngineClient } from "./interface/EnjinClient.js";
 import type { EnjinOptions } from "./interface/EnjinOptions.js";
+import type { Message, OmitPartialGroupDMChannel, PartialMessage, Snowflake } from "discord.js";
 
 class Enjin {
   process: NodeJS.Process[];
   private owners: Snowflake[];
+  private react: boolean;
+  private reactEmoji: string;
 
   constructor(
     public client: Client,
@@ -27,19 +29,38 @@ class Enjin {
     if (!options.owners) throw new Error("[ Enjin ] Owners not provided.");
     if (!options.secrets || !Array.isArray(options.secrets)) options.secrets = [];
     options.aliases =
-      this.options.aliases && this.options.aliases.length > 0 ? [...new Set(this.options.aliases)] : ["eval"];
+      this.options.aliases && this.options.aliases.length > 0 ? [...new Set(this.options.aliases)] : ["enjin"];
 
     const engineClient = client as EngineClient;
     if (!engineClient.__Enjin) engineClient.__Enjin = detectShard(client);
 
     this.owners = options.owners;
     this.process = [process];
+    this.react = options.react ?? true;
+    this.reactEmoji = options.reactEmoji && options.reactEmoji.length > 0 ? options.reactEmoji : "✅";
+
     if (client.isReady()) this.options.secrets?.push(client.token);
     else client.once(Events.ClientReady, (c) => this.options.secrets?.push(c.token));
   }
 
-  public async run(message: Message) {
+  private async resolveInput(message: Message, input: string): Promise<string> {
+    if (input.trim()) return input;
+    if (!message.reference?.messageId) return input;
+
+    try {
+      const referenced = await message.fetchReference();
+      return referenced.content || input;
+    } catch {
+      return input;
+    }
+  }
+
+  public async run(
+    message: OmitPartialGroupDMChannel<Message>,
+    oldMessage?: OmitPartialGroupDMChannel<Message | PartialMessage>
+  ) {
     if (!message.content) return;
+    if (oldMessage && !oldMessage.partial && oldMessage.content === message.content) return;
 
     const prefix = this.options.prefix ?? "";
 
@@ -54,7 +75,7 @@ class Enjin {
 
     const engineMatch = afterCommand.match(/^(\S+)\s*/);
     const engine = engineMatch?.[1];
-    const input = engineMatch ? afterCommand.slice(engineMatch[0].length) : afterCommand;
+    const rawInput = engineMatch ? afterCommand.slice(engineMatch[0].length) : afterCommand;
 
     if (!command || !this.options.aliases?.includes(command)) return;
     const ctx = { message, secrets: this.options.secrets };
@@ -63,6 +84,10 @@ class Enjin {
       await Default(this.client, ctx);
       return;
     }
+
+    const input = await this.resolveInput(message, rawInput);
+
+    let handled = true;
 
     try {
       switch (engine) {
@@ -103,9 +128,17 @@ class Enjin {
           break;
 
         case "help":
-        default:
           await message.reply(`[ Enjin ] Available Options: ${Commands.map((t) => `\`${t}\``).join(", ")}`);
           break;
+
+        default:
+          handled = false;
+          await message.reply(`[ Enjin ] Available Options: ${Commands.map((t) => `\`${t}\``).join(", ")}`);
+          break;
+      }
+
+      if (handled && this.react) {
+        await message.react(this.reactEmoji).catch(() => {});
       }
     } catch (err: unknown) {
       console.error("[ Enjin ] ", err);

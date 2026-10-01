@@ -5,4 +5,6 @@ export interface EnjinOptions {
   owners: Snowflake[];
   prefix?: string;
   secrets?: string[];
+  react?: boolean;
+  reactEmoji?: string;
 }

@@ -4,6 +4,19 @@ import { CodeBlock } from "../utils/codeBlock.js";
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
 
+async function runIife(code: string): Promise<unknown> {
+  const asExpression = `(async () => {\nreturn (\n${code}\n);\n})()`;
+
+  try {
+    return await eval(asExpression);
+  } catch (err: unknown) {
+    if (!(err instanceof SyntaxError)) throw err;
+  }
+
+  const asStatements = `(async () => {\n${code}\n})()`;
+  return await eval(asStatements);
+}
+
 export const iife = async (client: Client, ctx: Context, rawCode: string | undefined) => {
   const { message } = ctx;
 
@@ -14,10 +27,9 @@ export const iife = async (client: Client, ctx: Context, rawCode: string | undef
 
   const parsed = CodeBlock.parse(rawCode);
   const code = parsed?.content ?? rawCode;
-  const wrapped = `(async () => {\n${code}\n})()`;
 
   try {
-    let result: unknown = await eval(wrapped);
+    let result: unknown = await runIife(code);
     if (typeof result === "function") result = result.toString();
     await sendResult(message, result, ctx.secrets, client.token, "js");
   } catch (err: unknown) {
