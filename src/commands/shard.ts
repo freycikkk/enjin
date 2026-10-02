@@ -1,6 +1,6 @@
+import util from "node:util";
 import { sendResult } from "../utils/respond.js";
 import { CodeBlock } from "../utils/codeBlock.js";
-import util from "node:util";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

@@ -1,7 +1,7 @@
+import util from "node:util";
 import { Chunking } from "./Chunking.js";
 import { sanitize } from "./sanitize.js";
 import { Paginator } from "./paginator.js";
-import util from "node:util";
 
 import type { Message } from "discord.js";
 import type { InfoReport } from "../class/InfoReport.js";

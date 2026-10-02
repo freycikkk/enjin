@@ -1,6 +1,6 @@
-import { InfoReport } from "../class/InfoReport.js";
-import { sendReport } from "../utils/respond.js";
 import { list, num } from "../utils/format.js";
+import { sendReport } from "../utils/respond.js";
+import { InfoReport } from "../class/InfoReport.js";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

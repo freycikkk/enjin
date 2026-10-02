@@ -1,10 +1,10 @@
-import { InfoReport } from "../class/InfoReport.js";
+import os from "node:os";
 import { Status } from "discord.js";
-import { bytes, clip, date, duration, enumName, list, num, str, yn } from "../utils/format.js";
 import { read } from "../utils/access.js";
 import { sendReport } from "../utils/respond.js";
+import { InfoReport } from "../class/InfoReport.js";
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
-import os from "node:os";
+import { bytes, clip, date, duration, enumName, list, num, str, yn } from "../utils/format.js";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

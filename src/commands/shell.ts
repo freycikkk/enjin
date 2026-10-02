@@ -1,6 +1,6 @@
+import { spawn } from "node:child_process";
 import { CodeBlock } from "../utils/codeBlock.js";
 import { Paginator } from "../utils/paginator.js";
-import { spawn } from "node:child_process";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

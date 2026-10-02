@@ -1,5 +1,5 @@
-import { InfoReport } from "../class/InfoReport.js";
 import { sendReport } from "../utils/respond.js";
+import { InfoReport } from "../class/InfoReport.js";
 import { read, readNum, readStr } from "../utils/access.js";
 import { clip, date, enumName, flags, num, str, yn } from "../utils/format.js";
 import { ChannelType, GuildNSFWLevel, GuildVerificationLevel, InviteTargetType } from "discord.js";

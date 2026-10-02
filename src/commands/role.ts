@@ -1,5 +1,5 @@
-import { InfoReport } from "../class/InfoReport.js";
 import { sendReport } from "../utils/respond.js";
+import { InfoReport } from "../class/InfoReport.js";
 import { parseSnowflake } from "../utils/snowflake.js";
 import { date, flags, hex, num, str, yn } from "../utils/format.js";
 

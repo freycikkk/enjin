@@ -1,8 +1,8 @@
-import { sendReport } from "../utils/respond.js";
-import { InfoReport } from "../class/InfoReport.js";
-import { bytes, num, yn } from "../utils/format.js";
 import os from "node:os";
 import v8 from "node:v8";
+import { sendReport } from "../utils/respond.js";
+import { bytes, num, yn } from "../utils/format.js";
+import { InfoReport } from "../class/InfoReport.js";
 
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";

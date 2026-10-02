@@ -1,17 +1,9 @@
-import { InfoReport } from "../class/InfoReport.js";
-import { parseSnowflake, snowflakeTime } from "../utils/snowflake.js";
-import { cacheSize, readNum } from "../utils/access.js";
 import { sendReport } from "../utils/respond.js";
+import { InfoReport } from "../class/InfoReport.js";
+import { cacheSize, readNum } from "../utils/access.js";
+import { parseSnowflake, snowflakeTime } from "../utils/snowflake.js";
 import { clip, date, enumName, flags, list, num, str, yn } from "../utils/format.js";
-import {
-  ChannelType,
-  GuildDefaultMessageNotifications,
-  GuildExplicitContentFilter,
-  GuildMFALevel,
-  GuildNSFWLevel,
-  GuildPremiumTier,
-  GuildVerificationLevel,
-} from "discord.js";
+import { ChannelType, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildVerificationLevel } from "discord.js";
 
 import type { Client, Guild } from "discord.js";
 import type { Context } from "../interface/Context.js";
