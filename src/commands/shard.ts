@@ -6,8 +6,18 @@ import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
 import type { EngineClient } from "../interface/EnjinClient.js";
 
+// util.inspect settings: show everything, one property per line.
 const INSPECT_OPTIONS = { depth: Infinity, maxArrayLength: Infinity, breakLength: 80, compact: false } as const;
 
+/**
+ * `shard <code>`  (alias: `cluster`)
+ * Runs the code on EVERY shard / cluster with `broadcastEval` and shows each
+ * result, plus a TOTAL on top. Numbers are summed and arrays are merged.
+ *
+ * The code gets `client` (the one of that shard) and must be an expression,
+ * for example `client.guilds.cache.size`. It can't use variables from this bot's
+ * own scope because it's sent to the other processes as text.
+ */
 export const shard = async (client: Client, ctx: Context, rawCode: string | undefined) => {
   const { message } = ctx;
 
@@ -19,6 +29,7 @@ export const shard = async (client: Client, ctx: Context, rawCode: string | unde
   const engineClient = client as EngineClient;
   const meta = engineClient.__Enjin;
 
+  // No sharding in use, there is nobody to broadcast to.
   if (!meta || meta.shardType === "none") {
     await message.reply({ content: "[ Enjin ] Shard manager not found." });
     return;
@@ -28,12 +39,14 @@ export const shard = async (client: Client, ctx: Context, rawCode: string | unde
   const code = parsed?.content ?? rawCode;
 
   try {
+    // Wrap the code in an async function that receives `client`.
     const evalFn = Function("client", `"use strict"; return (async () => { return ${code} })();`) as (
       client: Client<boolean>
     ) => Promise<unknown>;
 
     let results: unknown[];
 
+    // The two sharding libraries have different APIs for the same thing.
     if (meta.shardType === "hybrid") {
       if (!meta.cluster) throw new Error("[ Enjin ] Cluster manager not ready.");
       results = await meta.cluster.broadcastEval(evalFn);
@@ -42,10 +55,12 @@ export const shard = async (client: Client, ctx: Context, rawCode: string | unde
       results = await client.shard.broadcastEval(evalFn);
     }
 
+    // Shards that returned nothing (undefined) are left out of the total.
     const valid = results.filter((v) => v !== undefined);
 
     let total: unknown = valid;
 
+    // All numbers -> add them. All arrays -> join them. Anything else is shown as a list.
     if (valid.length && valid.every((v) => typeof v === "number")) {
       total = valid.reduce((a, b) => (a as number) + (b as number), 0);
     } else if (valid.length && valid.every((v) => Array.isArray(v))) {

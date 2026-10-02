@@ -7,8 +7,14 @@ import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
 import type { EngineClient } from "../interface/EnjinClient.js";
 
+// Intents shown in the overview. These are the privileged ones that people most often forget to enable.
 const INTENTS = [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent];
 
+/**
+ * Runs when you type just the alias (`!enjin`) with no engine.
+ * Replies with a compact status overview: versions, uptime, ping, memory,
+ * CPU, sharding, cache sizes and intents.
+ */
 export const Default = async (client: Client, ctx: Context) => {
   const { message } = ctx;
   const { version } = pkg;
@@ -18,10 +24,12 @@ export const Default = async (client: Client, ctx: Context) => {
 
   const intents = new IntentsBitField(client.options.intents);
 
+  // Uptime is shown as a Discord timestamp, so work out when the process started.
   const now = Date.now();
   const processStart = now - process.uptime() * 1000;
   const botReady = client.readyAt?.getTime() ?? now;
 
+  // Raw numbers are in bytes / microseconds, converted to MB / ms below.
   const mem = process.memoryUsage();
   const cpu = process.cpuUsage();
 
@@ -38,6 +46,8 @@ export const Default = async (client: Client, ctx: Context) => {
   const shardCount =
     meta?.shardType === "none" ? "1 (Single Shard By Default)" : String(client.options.shardCount ?? 1);
 
+  // When sharded, ask every shard / cluster for its numbers and add them up.
+  // They stay null on a single process, and the report falls back to the local cache.
   let globalGuilds: number | null = null;
   let globalUsers: number | null = null;
 
@@ -60,9 +70,11 @@ export const Default = async (client: Client, ctx: Context) => {
       globalUsers = results.reduce((a, b) => a + b.users, 0);
     }
   } catch (err: unknown) {
+    // Shards may not be ready yet. Not worth failing the whole report over.
     console.log(err);
   }
 
+  // "GuildMembers: Enabled | GuildPresences: Disabled | ..."
   const intentInfo = INTENTS.map((i) => `${GatewayIntentBits[i]}:${intents.has(i) ? " Enabled" : " Disabled"}`).join(
     " | "
   );

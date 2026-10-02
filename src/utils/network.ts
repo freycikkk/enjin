@@ -1,5 +1,13 @@
 import { isIP } from "node:net";
 
+/**
+ * True when an IP points at the local machine or a private network.
+ * Used by `curl` so the bot can't be tricked into calling internal services
+ * (SSRF), for example http://localhost or http://192.168.x.x.
+ *
+ * Covers: 10.x, 127.x, 0.x, 169.254.x (link-local), 172.16-31.x, 192.168.x
+ * for IPv4 and ::1, ::, fe80:, fc/fd (unique local) for IPv6.
+ */
 export function isPrivateAddress(ip: string): boolean {
   const version = isIP(ip);
 

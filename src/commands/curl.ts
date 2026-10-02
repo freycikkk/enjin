@@ -5,8 +5,14 @@ import dns from "node:dns/promises";
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
 
+// Responses bigger than this are refused. Note the check counts characters, not bytes.
 const MAX_BYTES = 1_000_000;
 
+/**
+ * `curl <url>`
+ * Downloads a http/https url and shows the response body.
+ * Blocks private / local addresses so it can't be used to reach internal services.
+ */
 export const curl = async (client: Client, ctx: Context, input: string | undefined) => {
   const { message } = ctx;
 
@@ -23,6 +29,7 @@ export const curl = async (client: Client, ctx: Context, input: string | undefin
       return;
     }
 
+    // Resolve the hostname ourselves first, a public-looking name can still point to a private IP.
     let address: string;
     try {
       ({ address } = await dns.lookup(url.hostname));

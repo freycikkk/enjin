@@ -10,6 +10,8 @@ Enjin is an owner-only evaluation engine for Discord.js bots that provides a saf
 - File inspection (`cat`)
 - Round-trip latency (`rtt`)
 - Shard and cluster inspection
+- Detailed info on guilds, channels, users, roles, emojis and invites
+- Memory, cache and process reports
 - Automatic pagination for long outputs, with controls that disable once they stop working
 - Live-updating shell output
 - Run commands from a replied message, or when a message is edited
@@ -100,6 +102,40 @@ Example:
 | `cat` | File inspection |
 | `rtt` | Round-trip latency |
 | `shard` | Shard and cluster information |
+| `guild` | Detailed guild info by id (falls back to the public preview for guilds the bot is not in) |
+| `channel` | Detailed channel / thread / forum / DM info by id, mention or link |
+| `emoji` | Custom emoji (cached, application or CDN lookup) or unicode emoji code points |
+| `invite` | Invite lookup by code or link, without joining |
+| `user` | Full user info fetched from the API, by id or mention |
+| `member` | Guild specific info for a user: `member <guildId> <userId>` (roles, join date, permissions, voice, presence) |
+| `role` | Role info by id or mention |
+| `memory` | Very detailed memory report (RSS, V8 heap, heap spaces, system memory) |
+| `cache` | Count of everything in the client cache, combined across shards when sharded |
+| `process` | Detailed report of the running Node process |
+
+### Info engines
+
+```text
+!enjin guild 123456789012345678       (no id = current guild)
+!enjin channel #general               (no id = current channel)
+!enjin user @someone                  (no id = yourself)
+!enjin member <guildId> <userId>
+!enjin role @Moderators
+!enjin emoji <:name:123456789012345678>
+!enjin emoji 🔥
+!enjin invite discord.gg/abc123
+!enjin memory
+!enjin cache
+!enjin process
+```
+
+Short aliases: `server` (guild), `mem` (memory), `proc` (process).
+
+Notes:
+
+- `role` can only find roles in guilds cached by the current shard, because Discord has no "get role by id" endpoint.
+- Environment variables are never printed by `process`, only their count.
+- All reports go through secret redaction and are paginated like every other output.
 
 ## Security
 

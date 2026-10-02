@@ -3,12 +3,19 @@ import WebSocket from "ws";
 import type { Client } from "discord.js";
 import type { Context } from "../interface/Context.js";
 
+/**
+ * `rtt`
+ * Measures the real round-trip time to Discord's gateway by opening a fresh
+ * connection 5 times and timing how long the first message takes.
+ * This is more honest than `client.ws.ping`, which is only the heartbeat latency.
+ */
 export const rtt = async (client: Client, ctx: Context) => {
   const { message } = ctx;
 
   let output = "[ Enjin ] Calculating round-trip time...\n";
   const statusMsg = await message.reply(output);
 
+  // Only successful readings go here, failed ones are skipped in the average.
   const latencies: number[] = [];
 
   for (let i = 0; i <= 4; i++) {
@@ -27,8 +34,7 @@ export const rtt = async (client: Client, ctx: Context) => {
     return;
   }
 
-  await statusMsg.edit(output);
-
+  // Average and standard deviation (how much the readings jump around).
   const avg = latencies.reduce((a, b) => a + b, 0) / latencies.length;
 
   const stdDev = Math.sqrt(latencies.reduce((s, v) => s + Math.pow(v - avg, 2), 0) / latencies.length);
@@ -39,6 +45,10 @@ export const rtt = async (client: Client, ctx: Context) => {
   await statusMsg.edit(output);
 };
 
+/**
+ * Opens a websocket to the gateway and resolves with the ms until Discord
+ * sends its first message (the Hello). Resolves null on error or after 5 seconds.
+ */
 function measureGatewayRTT(): Promise<number | null> {
   return new Promise((resolve) => {
     const ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
